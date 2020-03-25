@@ -2,7 +2,7 @@
 Downloads all your videos, perfect for personal backups
 
 ## How to use
-Either download the [dockerized Version]() or the [released NodeJS Application]().
+Either download the [dockerized Version](https://hub.docker.com/repository/docker/xaviius/streamable_downloader) or the [released NodeJS Application](https://github.com/BenediktBertsch/Streamable_Downloader/releases).
 
 ## Docker configuration
 Map the configuration Volume and put your data into the configuration file.
