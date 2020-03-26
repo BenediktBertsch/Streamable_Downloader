@@ -3,24 +3,47 @@ const Axios = require('axios')
 const fs = require('fs')
 const download = require('download')
 const cron = require('cron').CronJob
-const config = require('./config.json.js')
+const config = require('./config.json')
+//Configuration file
+const configpath = '/config/config.json'
 
-//Configuration
-const downloadpath = config.downloadpath
-const username = config.username
-const password = config.password
-const cronjob = config.cronjob
+checkConfig(configpath)
 
-if (cronjob !== "") {
-    var job = new cron(cronjob, function () {
-        getVideos(username, password)
-    }, null, true);
-    job.start()
-} else {
-    getVideos(username, password)
+function checkConfig(configpath) {
+    try {
+        if (fs.existsSync(configpath)) {
+            //Configuration
+            const downloadpath = '/download'
+            const username = config.username
+            const password = config.password
+            const cronjob = config.cronjob
+            checkInput(username, password, cronjob, downloadpath)
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-async function getVideos(username, password) {
+function checkInput(username, password, cronjob, downloadpath) {
+    if (username !== undefined && password !== undefined) {
+        start(username, password, cronjob, downloadpath)
+    } else {
+        console.log('Needs username and password')
+    }
+}
+
+function start(username, password, cronjob, downloadpath) {
+    if (cronjob !== undefined) {
+        var job = new cron(cronjob, function () {
+            getVideos(username, password, downloadpath)
+        }, null, true);
+        job.start()
+    } else {
+        getVideos(username, password, downloadpath)
+    }
+}
+
+async function getVideos(username, password, downloadpath) {
     console.log('Getting needed cookies...')
     cookie = await getCookies(username, password)
     if (cookie !== 'error') {
@@ -40,7 +63,7 @@ async function getVideos(username, password) {
                 }).then(response => {
                     response.data.videos.forEach(video => {
                         Axios.get('https://api.streamable.com/videos/' + video.url.split('/')[3]).then(resp => {
-                            downloadvideos(resp.data, video.url.split('/')[3])
+                            downloadvideos(resp.data, video.url.split('/')[3], downloadpath)
                         }).catch(err => console.log(err))
                     })
                 }).catch(error => console.log(error))
@@ -71,7 +94,7 @@ async function getCookies(username, password) {
     }).catch((e) => console.log(e))
 }
 
-function downloadvideos(videodata, shortcode) {
+function downloadvideos(videodata, shortcode, downloadpath) {
     download('https:' + videodata.files.mp4.url).then(e => {
         fs.writeFileSync(downloadpath + videodata.title + '_' + shortcode + '.mp4', e)
         console.log('Finished downloading: ' + videodata.title)
