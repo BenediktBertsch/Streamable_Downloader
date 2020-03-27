@@ -41,7 +41,7 @@ function checkConfig(configpath) {
 }
 
 function checkInput(username, password, cronjob, downloadpath) {
-    if (username !== undefined && password !== undefined) {
+    if (username !== undefined && username !== "" && password !== undefined && password !== "") {
         start(username, password, cronjob, downloadpath)
     } else {
         console.log('Needs username and password')
@@ -49,7 +49,7 @@ function checkInput(username, password, cronjob, downloadpath) {
 }
 
 function start(username, password, cronjob, downloadpath) {
-    if (cronjob !== undefined) {
+    if (cronjob !== undefined && cronjob !== "") {
         var job = new cron(cronjob, function () {
             getVideos(username, password, downloadpath)
         }, null, true);
