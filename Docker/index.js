@@ -18,6 +18,9 @@ function checkConfig(configpath) {
             const password = config.password
             const cronjob = config.cronjob
             checkInput(username, password, cronjob, downloadpath)
+        }else{
+            fs.copyFileSync('./config.json', '/config/config.json')
+            checkConfig(configpath)
         }
     } catch (error) {
         console.log(error)
