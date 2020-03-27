@@ -11,17 +11,30 @@ checkConfig(configpath)
 
 function checkConfig(configpath) {
     try {
-        if (fs.existsSync(configpath)) {
-            //Configuration
-            const downloadpath = '/download'
-            const username = config.username
-            const password = config.password
-            const cronjob = config.cronjob
-            checkInput(username, password, cronjob, downloadpath)
-        }else{
-            fs.copyFileSync('./config.json', '/config/config.json')
-            checkConfig(configpath)
-        }
+        console.log('Checking Config File...')
+        fs.exists('/config/config.json', (value) => {
+            if (value == false) {
+                fs.copyFile('/nodeapp/dist/config.json', '/config/config.json', (err) => {
+                    if (err) {
+                        throw err
+                    }
+                    fs.chmod('/config/config.json', '777', (err) => {
+                        if (err) {
+                            throw err
+                        }
+                    })
+                    console.log('Created Config File. Checking again...')
+                    checkConfig(configpath)
+                })
+            } else {
+                //Configuration
+                const downloadpath = '/download'
+                const username = config.username
+                const password = config.password
+                const cronjob = config.cronjob
+                checkInput(username, password, cronjob, downloadpath)
+            }
+        })
     } catch (error) {
         console.log(error)
     }
