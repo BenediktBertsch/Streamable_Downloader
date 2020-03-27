@@ -46,6 +46,7 @@ function checkInput(username, password, cronjob, downloadpath) {
 
 function start(username, password, cronjob, downloadpath) {
     if (cronjob !== undefined && cronjob !== "") {
+        console.log('Starting cronjob...')
         var job = new cron(cronjob, function () {
             getVideos(username, password, downloadpath)
         }, null, true);
