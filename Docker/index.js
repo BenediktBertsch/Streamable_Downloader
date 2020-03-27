@@ -14,7 +14,7 @@ function checkConfig(configpath) {
         console.log('Checking Config File...')
         fs.exists('/config/config.json', (value) => {
             if (value == false) {
-                fs.copyFile('/nodeapp/dist/config.json', '/config/config.json', (err) => {
+                fs.copyFile('/nodeapp/config.json', '/config/config.json', (err) => {
                     if (err) {
                         throw err
                     }
