@@ -3,7 +3,7 @@ const Axios = require('axios')
 const fs = require('fs')
 const download = require('download')
 const cron = require('cron').CronJob
-const config = require('./config.json')
+const config = require('/config/config.json')
 //Configuration file
 const configpath = '/config/config.json'
 
