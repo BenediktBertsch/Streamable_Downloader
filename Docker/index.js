@@ -12,13 +12,13 @@ checkConfig(configpath)
 function checkConfig(configpath) {
     try {
         console.log('Checking Config File...')
-        fs.exists('/config/config.json', (value) => {
+        fs.exists(configpath, (value) => {
             if (value == false) {
-                fs.copyFile('/nodeapp/config.json', '/config/config.json', (err) => {
+                fs.copyFile('/nodeapp/config.json', configpath, (err) => {
                     if (err) {
                         throw err
                     }
-                    fs.chmodSync('/config/config.json', '777')
+                    fs.chmodSync(configpath, '777')
                     console.log('Created Config File. Checking again...')
                     checkConfig(configpath)
                 })
