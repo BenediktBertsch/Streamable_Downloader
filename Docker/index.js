@@ -57,6 +57,7 @@ function start(username, password, cronjob, downloadpath) {
 }
 
 async function getVideos(username, password, downloadpath) {
+    datefolder = downloadpath + "/" + new Date().getUTCDate() + "-" + (new Date().getUTCMonth() + 1) + "-" + new Date().getUTCFullYear() + "/"
     console.log('Getting needed cookies...')
     cookie = await getCookies(username, password)
     if (cookie !== 'error') {
@@ -76,7 +77,7 @@ async function getVideos(username, password, downloadpath) {
                 }).then(response => {
                     response.data.videos.forEach(video => {
                         Axios.get('https://api.streamable.com/videos/' + video.url.split('/')[3]).then(resp => {
-                            downloadvideos(resp.data, video.url.split('/')[3], downloadpath)
+                            downloadvideos(resp.data, video.url.split('/')[3], datefolder)
                         }).catch(err => console.log(err))
                     })
                 }).catch(error => console.log(error))
@@ -108,6 +109,9 @@ async function getCookies(username, password) {
 }
 
 function downloadvideos(videodata, shortcode, downloadpath) {
+    if (!fs.existsSync(downloadpath)) {
+        fs.mkdirSync(downloadpath, {recursive: true})
+    }
     download('https:' + videodata.files.mp4.url).then(e => {
         fs.writeFileSync(downloadpath + videodata.title + '_' + shortcode + '.mp4', e)
         console.log('Finished downloading: ' + videodata.title)
