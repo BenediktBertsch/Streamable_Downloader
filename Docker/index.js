@@ -116,4 +116,5 @@ function downloadvideos(videodata, shortcode, downloadpath) {
         fs.writeFileSync(downloadpath + videodata.title + '_' + shortcode + '.mp4', e)
         console.log('Finished downloading: ' + videodata.title)
     }).catch(e => console.log(e));
+    console.log('Done.')
 }
